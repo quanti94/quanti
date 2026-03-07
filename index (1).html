@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Österreichisch Lernen</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#c0392b;--red2:#e74c3c;--white:#faf9f6;--cream:#f0ede6;--dark:#1a1208;--mid:#3d2b1a;--gold:#c9972a;--gold2:#f0c040;--green:#27ae60;--shadow:0 8px 32px rgba(0,0,0,0.18)}
+html,body{min-height:100vh;background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--dark)}
+header{background:var(--red);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(192,57,43,0.4)}
+.logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900}
+.logo span{color:var(--gold2)}
+.stats-bar{display:flex;gap:0.7rem;font-size:0.75rem;font-weight:500}
+.stat{background:rgba(255,255,255,0.15);padding:0.3rem 0.7rem;border-radius:20px;display:flex;align-items:center;gap:0.3rem}
+.stat-num{font-weight:700;font-size:0.9rem}
+.at-stripe{height:4px;background:linear-gradient(90deg,var(--red) 0%,var(--white) 50%,var(--red) 100%)}
+nav{background:var(--dark);display:flex;overflow-x:auto}
+nav button{flex:1;min-width:80px;padding:0.7rem 0.5rem;background:none;border:none;color:#aaa;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;white-space:nowrap}
+nav button.active{color:var(--gold2);border-bottom-color:var(--gold2)}
+nav button:hover{color:#fff}
+main{padding:1.2rem;max-width:600px;margin:0 auto}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem;margin-bottom:1.2rem}
+.cat-btn{background:#fff;border:2px solid transparent;border-radius:12px;padding:0.9rem 0.7rem;cursor:pointer;text-align:left;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.cat-btn:hover{border-color:var(--red);transform:translateY(-2px)}
+.cat-btn.active{border-color:var(--red);background:#fff5f5}
+.cat-icon{font-size:1.6rem;margin-bottom:0.3rem}
+.cat-name{font-size:0.8rem;font-weight:600;color:var(--dark)}
+.cat-count{font-size:0.68rem;color:#888;margin-top:0.1rem}
+.level-row{display:flex;gap:0.5rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.lvl-btn{padding:0.3rem 0.8rem;border-radius:20px;border:1.5px solid #ddd;background:#fff;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.lvl-btn.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.card-area{display:flex;flex-direction:column;align-items:center;gap:1rem}
+.card-counter{font-size:0.75rem;color:#888;font-weight:500}
+.flashcard-wrap{width:100%;perspective:1200px}
+.flashcard{width:100%;min-height:220px;position:relative;transform-style:preserve-3d;transition:transform 0.55s cubic-bezier(.4,0,.2,1);cursor:pointer;border-radius:20px}
+.flashcard.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;box-shadow:var(--shadow)}
+.card-front{background:linear-gradient(135deg,var(--red) 0%,#8e1a0e 100%);color:#fff}
+.card-back{background:linear-gradient(135deg,#1a1208 0%,#3d2b1a 100%);color:#fff;transform:rotateY(180deg)}
+.card-label{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;opacity:0.6;margin-bottom:0.5rem;text-transform:uppercase}
+.card-pl{font-size:1.5rem;font-family:'Playfair Display',serif;font-weight:700;text-align:center;margin-bottom:0.3rem}
+.card-level{font-size:0.65rem;background:rgba(255,255,255,0.2);padding:0.2rem 0.6rem;border-radius:10px;margin-top:0.5rem}
+.card-hint{font-size:0.72rem;opacity:0.6;margin-top:0.8rem}
+.compare{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.compare-box{border-radius:14px;padding:1rem;text-align:center}
+.at-box{background:linear-gradient(135deg,#c0392b,#96281b)}
+.de-box{background:linear-gradient(135deg,#2c3e50,#1a252f)}
+.flag{font-size:1.4rem;margin-bottom:0.3rem}
+.compare-label{font-size:0.6rem;letter-spacing:0.15em;color:rgba(255,255,255,0.6);text-transform:uppercase}
+.compare-word{font-size:1.2rem;font-family:'Playfair Display',serif;font-weight:700;color:#fff;margin:0.3rem 0}
+.compare-phonetic{font-size:0.7rem;color:rgba(255,255,255,0.55);font-style:italic}
+.speak-btn{background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:0.3rem 0.7rem;color:#fff;font-size:0.7rem;cursor:pointer;margin-top:0.4rem;transition:background 0.2s}
+.speak-btn:hover{background:rgba(255,255,255,0.3)}
+.card-actions{display:flex;gap:0.7rem;width:100%}
+.btn{flex:1;padding:0.7rem;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-wrong{background:#fde8e6;color:var(--red2)}
+.btn-wrong:hover{background:#fbd0cc}
+.btn-skip{background:#f0ede6;color:#888}
+.btn-correct{background:#e8f8ee;color:var(--green)}
+.btn-correct:hover{background:#d0f0de}
+.progress-section{margin-bottom:1.5rem}
+.progress-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.8rem;color:var(--dark)}
+.progress-bar-wrap{background:#e8e4dc;border-radius:10px;height:10px;margin-bottom:0.3rem;overflow:hidden}
+.progress-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width 0.5s ease}
+.progress-row{display:flex;justify-content:space-between;font-size:0.72rem;color:#888;margin-bottom:1rem}
+.achievement{background:#fff;border-radius:12px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:0.6rem;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.ach-icon{font-size:1.5rem}
+.ach-name{font-size:0.8rem;font-weight:600}
+.ach-desc{font-size:0.68rem;color:#888}
+.flip-hint{font-size:0.68rem;color:#aaa;text-align:center}
+.page{display:none}
+.page.active{display:block}
+</style>
+</head>
+<body>
+<div class="at-stripe"></div>
+<header>
+  <div class="logo">Öster<span>reich</span> Lernen</div>
+  <div class="stats-bar">
+    <div class="stat">🎯 <span class="stat-num" id="h-correct">0</span></div>
+    <div class="stat">🔥 <span class="stat-num" id="h-streak">0</span></div>
+    <div class="stat">📚 <span class="stat-num" id="h-total">0</span></div>
+  </div>
+</header>
+<nav>
+  <button class="active" onclick="showPage('learn')">🃏 Fiszki</button>
+  <button onclick="showPage('compare')">🔄 AT vs DE</button>
+  <button onclick="showPage('cats')">📂 Kategorie</button>
+  <button onclick="showPage('progress')">📊 Postęp</button>
+</nav>
+
+<div id="page-learn" class="page active">
+<main>
+  <div class="level-row">
+    <button class="lvl-btn active" onclick="setLevel('all',this)">Wszystkie</button>
+    <button class="lvl-btn" onclick="setLevel('A1',this)">A1</button>
+    <button class="lvl-btn" onclick="setLevel('A2',this)">A2</button>
+    <button class="lvl-btn" onclick="setLevel('B1',this)">B1</button>
+    <button class="lvl-btn" onclick="setLevel('B2',this)">B2</button>
+  </div>
+  <div class="card-area">
+    <div class="card-counter" id="card-counter">Karta 1 / 1</div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-label">Po polsku</div>
+          <div class="card-pl" id="cf-pl">–</div>
+          <div class="card-level" id="cf-level">A1</div>
+          <div class="card-hint">kliknij aby odwrócić</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Po austriacku 🇦🇹</div>
+          <div class="card-pl" id="cb-at">–</div>
+          <div class="card-hint" id="cb-hint" style="font-size:0.8rem;opacity:0.7">–</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-wrong" onclick="rateCard(false)">✗ Nie umiem</button>
+      <button class="btn btn-skip" onclick="nextCard()">→ Pomiń</button>
+      <button class="btn btn-correct" onclick="rateCard(true)">✓ Umiem!</button>
+    </div>
+    <div class="flip-hint">Dotknij kartę aby zobaczyć odpowiedź</div>
+  </div>
+</main>
+</div>
+
+<div id="page-compare" class="page">
+<main>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.3rem">Austriacki vs Niemiecki</div>
+    <div style="font-size:0.75rem;color:#888">Te same rzeczy, inne słowa — kliknij 🔊 aby usłyszeć wymowę</div>
+  </div>
+  <div id="compare-list"></div>
+</main>
+</div>
+
+<div id="page-cats" class="page">
+<main>
+  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:1rem">Kategorie słówek</div>
+  <div class="cat-grid" id="cat-grid"></div>
+</main>
+</div>
+
+<div id="page-progress" class="page">
+<main>
+  <div class="progress-section">
+    <div class="progress-title">Twój postęp</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="progress-row"><span id="prog-text">0 / 0 słówek poznanych</span><span id="prog-pct">0%</span></div>
+  </div>
+  <div class="progress-section">
+    <div class="progress-title">Statystyki</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem">
+      <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><div style="font-size:1.8rem;font-weight:700;color:var(--green)" id="s-correct">0</div><div style="font-size:0.72rem;color:#888">Poprawnych</div></div>
+      <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><div style="font-size:1.8rem;font-weight:700;color:var(--red2)" id="s-wrong">0</div><div style="font-size:0.72rem;color:#888">Do powtórzenia</div></div>
+      <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><div style="font-size:1.8rem;font-weight:700;color:var(--gold)" id="s-streak">0</div><div style="font-size:0.72rem;color:#888">Najlepsza seria</div></div>
+      <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><div style="font-size:1.8rem;font-weight:700;color:#666" id="s-sessions">0</div><div style="font-size:0.72rem;color:#888">Sesji nauki</div></div>
+    </div>
+  </div>
+  <div class="progress-section">
+    <div class="progress-title">Osiągnięcia</div>
+    <div id="achievements"></div>
+  </div>
+</main>
+</div>
+
+<script>
+const WORDS=[
+  {pl:"ziemniak",at:"der Erdapfel",de:"die Kartoffel",phonetic:"ɛɐ̯t-ʔapfl̩",cat:"jedzenie",level:"A1",hint:"Dosłownie 'jabłko ziemi'"},
+  {pl:"pomidor",at:"der Paradeiser",de:"die Tomate",phonetic:"pa-ra-DAI-zɐ",cat:"jedzenie",level:"A1",hint:"Pochodzi z włoskiego 'paradiso'"},
+  {pl:"morela",at:"die Marille",de:"die Aprikose",phonetic:"ma-RIL-ə",cat:"jedzenie",level:"A1",hint:"Typowe słowo tylko w Austrii"},
+  {pl:"kalafior",at:"der Karfiol",de:"der Blumenkohl",phonetic:"KAR-fiol",cat:"jedzenie",level:"A2"},
+  {pl:"kukurydza",at:"der Kukuruz",de:"der Mais",phonetic:"ku-ku-RUS",cat:"jedzenie",level:"A2"},
+  {pl:"pieczarka",at:"der Schwammerl",de:"der Pilz",phonetic:"SHVAM-ɐl",cat:"jedzenie",level:"A2"},
+  {pl:"śmietana",at:"das Obers",de:"die Sahne",phonetic:"OH-bɐs",cat:"jedzenie",level:"A1"},
+  {pl:"bułka",at:"das Semmel",de:"das Brötchen",phonetic:"ZEM-əl",cat:"jedzenie",level:"A1"},
+  {pl:"rzeźnik",at:"der Fleischhauer",de:"der Metzger",phonetic:"FLAYSH-hau-ɐ",cat:"jedzenie",level:"B1"},
+  {pl:"styczeń",at:"der Jänner",de:"der Januar",phonetic:"JEN-ɐ",cat:"czas",level:"A1",hint:"Tylko Austria używa Jänner"},
+  {pl:"teraz / właśnie",at:"jetzt gleich",de:"sofort",phonetic:"yetst glayç",cat:"czas",level:"A2"},
+  {pl:"przedwczoraj",at:"vorgestern",de:"vorgestern",phonetic:"FOR-ges-tɐn",cat:"czas",level:"A2",hint:"To samo słowo!"},
+  {pl:"chodnik",at:"der Gehsteig",de:"der Bürgersteig",phonetic:"GEH-shtayg",cat:"miasto",level:"A1"},
+  {pl:"winda",at:"der Lift",de:"der Aufzug",phonetic:"lift",cat:"miasto",level:"A1"},
+  {pl:"sklep",at:"das Geschäft",de:"der Laden",phonetic:"gə-SHEFT",cat:"miasto",level:"A1"},
+  {pl:"parter",at:"das Erdgeschoß",de:"das Erdgeschoss",phonetic:"ƐⱯT-gə-shos",cat:"miasto",level:"A2",hint:"Austria używa 'ß' zamiast 'ss'"},
+  {pl:"apteka",at:"die Apotheke",de:"die Apotheke",phonetic:"a-po-TEH-kə",cat:"miasto",level:"A1",hint:"To samo słowo!"},
+  {pl:"Jak się masz?",at:"Wie geht's?",de:"Wie geht es Ihnen?",phonetic:"vi geːts",cat:"zwroty",level:"A1",hint:"W Austrii mówi się krócej i przyjaźniej"},
+  {pl:"Dziękuję bardzo",at:"Danke schön",de:"Vielen Dank",phonetic:"DAN-kə ʃøːn",cat:"zwroty",level:"A1"},
+  {pl:"Proszę (podając)",at:"Bitte sehr",de:"Bitte sehr",phonetic:"BIT-ə zeːɐ̯",cat:"zwroty",level:"A1"},
+  {pl:"Na zdrowie!",at:"Prost! / Prosit!",de:"Prost!",phonetic:"prɔst",cat:"zwroty",level:"A1"},
+  {pl:"Smacznego!",at:"Mahlzeit!",de:"Guten Appetit!",phonetic:"MAL-tsayt",cat:"zwroty",level:"A1"},
+  {pl:"Do widzenia",at:"Auf Wiederschauen",de:"Auf Wiedersehen",phonetic:"auf VEE-dɐ-ʃau-ən",cat:"zwroty",level:"A1",hint:"'schauen' zamiast 'sehen'"},
+  {pl:"nauczyciel (liceum)",at:"der Professor",de:"der Lehrer",phonetic:"pro-FES-ɔr",cat:"praca",level:"B1",hint:"W Austrii nauczyciel liceum = Professor"},
+  {pl:"urlop",at:"der Urlaub",de:"der Urlaub",phonetic:"OOR-laup",cat:"praca",level:"A2",hint:"To samo słowo!"},
+  {pl:"strumień",at:"der Bach",de:"der Bach",phonetic:"baχ",cat:"przyroda",level:"A2"},
+  {pl:"lawina",at:"die Lawine",de:"die Lawine",phonetic:"la-VEE-nə",cat:"przyroda",level:"B1",hint:"Austria to kraj Alp!"},
+  {pl:"schronisko górskie",at:"die Hütte",de:"die Berghütte",phonetic:"HYT-ə",cat:"przyroda",level:"B1"},
+];
+
+const CATS={
+  jedzenie:{icon:"🍽️",name:"Jedzenie"},
+  czas:{icon:"⏰",name:"Czas"},
+  miasto:{icon:"🏙️",name:"Miasto"},
+  zwroty:{icon:"💬",name:"Zwroty"},
+  praca:{icon:"💼",name:"Praca/Szkoła"},
+  przyroda:{icon:"🏔️",name:"Przyroda"},
+};
+
+let state={level:'all',cat:'all',deck:[],idx:0,flipped:false,correct:0,wrong:0,streak:0,bestStreak:0,known:new Set(),sessions:1};
+
+function getFiltered(){return WORDS.filter(w=>(state.level==='all'||w.level===state.level)&&(state.cat==='all'||w.cat===state.cat));}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function buildDeck(){
+  state.deck=shuffle([...getFiltered()]);
+  state.idx=0;state.flipped=false;showCard();
+}
+
+function showCard(){
+  document.getElementById('flashcard').classList.remove('flipped');
+  state.flipped=false;
+  const w=state.deck[state.idx];
+  if(!w)return;
+  document.getElementById('cf-pl').textContent=w.pl;
+  document.getElementById('cf-level').textContent=w.level+' · '+(CATS[w.cat]?.icon||'')+' '+(CATS[w.cat]?.name||w.cat);
+  document.getElementById('cb-at').textContent=w.at;
+  document.getElementById('cb-hint').textContent=w.hint||('Niemcy mówią: '+w.de);
+  document.getElementById('card-counter').textContent=`Karta ${state.idx+1} / ${state.deck.length}`;
+}
+
+function flipCard(){
+  state.flipped=!state.flipped;
+  document.getElementById('flashcard').classList.toggle('flipped',state.flipped);
+}
+
+function nextCard(){state.idx=(state.idx+1)%state.deck.length;showCard();}
+
+function rateCard(ok){
+  const w=state.deck[state.idx];
+  if(ok){state.correct++;state.streak++;state.known.add(w.pl);if(state.streak>state.bestStreak)state.bestStreak=state.streak;}
+  else{state.wrong++;state.streak=0;}
+  document.getElementById('h-correct').textContent=state.correct;
+  document.getElementById('h-streak').textContent=state.streak;
+  document.getElementById('h-total').textContent=state.known.size;
+  nextCard();
+}
+
+function setLevel(lvl,btn){
+  state.level=lvl;
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');buildDeck();
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('active',['learn','compare','cats','progress'][i]===name));
+  if(name==='compare')buildCompare();
+  if(name==='cats')buildCats();
+  if(name==='progress')buildProgress();
+}
+
+function buildCompare(){
+  document.getElementById('compare-list').innerHTML=WORDS.filter(w=>w.at!==w.de).map(w=>`
+    <div style="background:#fff;border-radius:16px;padding:1rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="font-size:0.72rem;color:#aaa;margin-bottom:0.6rem;font-weight:600">${CATS[w.cat]?.icon||''} ${w.pl} · <span style="background:#f0ede6;padding:0.1rem 0.4rem;border-radius:6px;font-size:0.65rem">${w.level}</span></div>
+      <div class="compare">
+        <div class="compare-box at-box">
+          <div class="flag">🇦🇹</div>
+          <div class="compare-label">Austriacki</div>
+          <div class="compare-word">${w.at}</div>
+          <div class="compare-phonetic">[${w.phonetic||'...'}]</div>
+          <button class="speak-btn" onclick="speak('${w.at.replace(/['"]/g,'')}','de-AT')">🔊 Wymowa</button>
+        </div>
+        <div class="compare-box de-box">
+          <div class="flag">🇩🇪</div>
+          <div class="compare-label">Niemiecki</div>
+          <div class="compare-word">${w.de}</div>
+          <div class="compare-phonetic"> </div>
+          <button class="speak-btn" onclick="speak('${w.de.replace(/['"]/g,'')}','de-DE')">🔊 Wymowa</button>
+        </div>
+      </div>
+      ${w.hint?`<div style="font-size:0.72rem;color:#888;margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid #f0ede6">💡 ${w.hint}</div>`:''}
+    </div>`).join('');
+}
+
+function buildCats(){
+  document.getElementById('cat-grid').innerHTML=
+    `<div class="cat-btn ${state.cat==='all'?'active':''}" onclick="selectCat('all',this)"><div class="cat-icon">🌍</div><div class="cat-name">Wszystkie</div><div class="cat-count">${WORDS.length} słówek</div></div>`+
+    Object.entries(CATS).map(([k,c])=>{
+      const n=WORDS.filter(w=>w.cat===k).length;
+      return `<div class="cat-btn ${state.cat===k?'active':''}" onclick="selectCat('${k}',this)"><div class="cat-icon">${c.icon}</div><div class="cat-name">${c.name}</div><div class="cat-count">${n} słówek</div></div>`;
+    }).join('');
+}
+
+function selectCat(cat,btn){
+  state.cat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');buildDeck();showPage('learn');
+}
+
+function buildProgress(){
+  const total=WORDS.length,known=state.known.size,pct=total?Math.round(known/total*100):0;
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=`${known} / ${total} słówek poznanych`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('s-correct').textContent=state.correct;
+  document.getElementById('s-wrong').textContent=state.wrong;
+  document.getElementById('s-streak').textContent=state.bestStreak;
+  document.getElementById('s-sessions').textContent=state.sessions;
+  const achs=[
+    {icon:'🌱',name:'Pierwszy krok',desc:'Poznaj pierwsze słówko',done:state.known.size>=1},
+    {icon:'🔥',name:'Na fali',desc:'Zdobądź serię 5',done:state.bestStreak>=5},
+    {icon:'🥨',name:'Wiedeński smak',desc:'Poznaj 5 słówek z Jedzenia',done:[...state.known].filter(pl=>WORDS.find(w=>w.pl===pl&&w.cat==='jedzenie')).length>=5},
+    {icon:'🏔️',name:'Alpejski wędrowiec',desc:'Poznaj wszystkie słówka z Przyrody',done:[...state.known].filter(pl=>WORDS.find(w=>w.pl===pl&&w.cat==='przyroda')).length>=WORDS.filter(w=>w.cat==='przyroda').length},
+    {icon:'🎓',name:'Student',desc:'Poznaj 20 słówek',done:state.known.size>=20},
+    {icon:'🏆',name:'Mistrz Austrii',desc:'Poznaj wszystkie słówka',done:state.known.size>=WORDS.length},
+  ];
+  document.getElementById('achievements').innerHTML=achs.map(a=>`
+    <div class="achievement" style="opacity:${a.done?1:0.4}">
+      <div class="ach-icon">${a.icon}</div>
+      <div><div class="ach-name">${a.name}${a.done?' ✓':''}</div><div class="ach-desc">${a.desc}</div></div>
+    </div>`).join('');
+}
+
+function speak(text,lang){
+  if(!window.speechSynthesis)return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang;u.rate=0.85;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+
+buildDeck();
+</script>
+</body>
+</html>
